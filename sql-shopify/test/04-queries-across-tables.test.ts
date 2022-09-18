@@ -18,7 +18,12 @@ describe("Queries Across Tables", () => {
     }, minutes(1));
 
     it("should select top 3 most common categories", async done => {
-        const query = `todo`;
+        const query = `SELECT COUNT(category_id) AS count, title AS category
+        FROM categories 
+        INNER JOIN apps_categories ON categories.id = apps_categories.category_id
+        GROUP BY category
+        ORDER BY COUNT DESC
+        LIMIT 3`;
         const result = await db.selectMultipleRows(query);
         expect(result).toEqual([
             { count: 1193, category: "Store design" },
